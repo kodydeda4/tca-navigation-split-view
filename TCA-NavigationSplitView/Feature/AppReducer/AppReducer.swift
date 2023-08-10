@@ -3,9 +3,9 @@ import ComposableArchitecture
 
 struct AppReducer: Reducer {
   struct State: Equatable {
-    var screenA = ScreenA.State()
-    var screenB = ScreenB.State()
-    var screenC = ScreenC.State()
+    var screenA = PlayerList.State()
+    var screenB = SportList.State()
+    var screenC = SessionList.State()
     
     @BindingState var destinationTag: DestinationTag? = .screenA
     
@@ -17,22 +17,22 @@ struct AppReducer: Reducer {
     }
   }
   enum Action: BindableAction, Equatable {
-    case screenA(ScreenA.Action)
-    case screenB(ScreenB.Action)
-    case screenC(ScreenC.Action)
+    case screenA(PlayerList.Action)
+    case screenB(SportList.Action)
+    case screenC(SessionList.Action)
     case setDestinationTag(State.DestinationTag)
     case binding(BindingAction<State>)
   }
   var body: some ReducerOf<Self> {
     BindingReducer()
     Scope(state: \.screenA, action: /Action.screenA) {
-      ScreenA()
+      PlayerList()
     }
     Scope(state: \.screenB, action: /Action.screenB) {
-      ScreenB()
+      SportList()
     }
     Scope(state: \.screenC, action: /Action.screenC) {
-      ScreenC()
+      SessionList()
     }
     Reduce { state, action in
       switch action {
@@ -70,22 +70,22 @@ struct AppView: View {
       } content: {
         switch viewStore.destinationTag {
         case .screenA:
-          ScreenAView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
+          PlayerListView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
         case .screenB:
-          ScreenBView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
+          SportListView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
         case .screenC:
-          ScreenCView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
+          SessionListView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
         case .none:
           EmptyView()
         }
       } detail: {
         switch viewStore.destinationTag {
         case .screenA:
-          ScreenAParentDetailView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
+          PlayerListDetailView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
         case .screenB:
-          ScreenBParentDetailView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
+          SportListDetailView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
         case .screenC:
-          ScreenCParentDetailView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
+          SessionListDetailView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
         case .none:
           EmptyView()
         }
