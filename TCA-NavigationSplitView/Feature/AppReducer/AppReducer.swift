@@ -13,7 +13,7 @@ struct AppReducer: Reducer {
     case players(PlayerList.Action)
     case sports(SportList.Action)
     case sessions(SessionList.Action)
-    case setDestinationTag(State.DestinationTag)
+    case setDestinationTag(State.DestinationTag?)
     case binding(BindingAction<State>)
   }
   var body: some ReducerOf<Self> {
@@ -69,42 +69,94 @@ struct AppView: View {
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       NavigationSplitView(columnVisibility: viewStore.$columnVisibility) {
-        NavigationStack {
-          List(selection: viewStore.$destinationTag) {
-            ForEach(AppReducer.State.DestinationTag.allCases) { value in
-              NavigationLink(value: value) {
-                Label(value.label.title, systemImage: value.label.systemImage)
-              }
-            }
-          }
-          .navigationTitle("PocketRadar")
-        }
+        Sidebar(store: store)
       } content: {
-        switch viewStore.destinationTag {
-        case .players:
-          PlayerListView(store: store.scope(state: \.players, action: AppReducer.Action.players))
-        case .sports:
-          SportListView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
-        case .sessions:
-          SessionListView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
-        case .none:
-          EmptyView()
-        }
+        Content(store: store)
       } detail: {
-        switch viewStore.destinationTag {
-        case .players:
-          PlayerListDetailView(store: store.scope(state: \.players, action: AppReducer.Action.players))
-        case .sports:
-          SportListDetailView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
-        case .sessions:
-          SessionListDetailView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
-        case .none:
-          EmptyView()
-        }
+        Detail(store: store)
       }
     }
   }
 }
+
+private struct Sidebar: View {
+  let store: StoreOf<AppReducer>
+
+  var body: some View {
+    WithViewStore(store, observe: \.destinationTag) { viewStore in
+      NavigationStack {
+        List(selection: viewStore.binding(
+          get: { $0 },
+          send: { .setDestinationTag($0) }
+        )) {
+          ForEach(AppReducer.State.DestinationTag.allCases) { value in
+            NavigationLink(value: value) {
+              Label(value.label.title, systemImage: value.label.systemImage)
+            }
+          }
+        }
+        .navigationTitle("PocketRadar")
+      }
+    }
+  }
+}
+
+private struct Content: View {
+  let store: StoreOf<AppReducer>
+  
+  var body: some View {
+    WithViewStore(store, observe: \.destinationTag) { viewStore in
+      switch viewStore.state {
+      case .players:
+        PlayerListView(store: store.scope(
+          state: \.players,
+          action: AppReducer.Action.players
+        ))
+      case .sports:
+        SportListView(store: store.scope(
+          state: \.sports,
+          action: AppReducer.Action.sports
+        ))
+      case .sessions:
+        SessionListView(store: store.scope(
+          state: \.sessions,
+          action: AppReducer.Action.sessions
+        ))
+      case .none:
+        EmptyView()
+      }
+    }
+  }
+}
+
+private struct Detail: View {
+  let store: StoreOf<AppReducer>
+  
+  var body: some View {
+    WithViewStore(store, observe: \.destinationTag) { viewStore in
+      switch viewStore.state {
+      case .players:
+        PlayerListDetailView(store: store.scope(
+          state: \.players,
+          action: AppReducer.Action.players
+        ))
+      case .sports:
+        SportListDetailView(store: store.scope(
+          state: \.sports,
+          action: AppReducer.Action.sports
+        ))
+      case .sessions:
+        SessionListDetailView(store: store.scope(
+          state: \.sessions,
+          action: AppReducer.Action.sessions
+        ))
+      case .none:
+        EmptyView()
+      }
+    }
+  }
+}
+
 
 // MARK: - SwiftUI Previews
 
