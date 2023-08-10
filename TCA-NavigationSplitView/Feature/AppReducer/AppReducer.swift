@@ -55,26 +55,82 @@ struct AppView: View {
   let store: StoreOf<AppReducer>
   
   var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      NavigationSplitView(columnVisibility: viewStore.$navigationSplitViewVisibility) {
-        Sidebar(store: store)
+    if UIDevice.current.userInterfaceIdiom == .phone {
+      iPhoneView(store: store)
+      //iPadView(store: store)
+    } else {
+      iPadView(store: store)
+    }
+  }
+}
+
+private struct iPadView: View {
+  let store: StoreOf<AppReducer>
+  
+  struct ViewState: Equatable {
+    let navigationSplitViewVisibility: NavigationSplitViewVisibility
+    let destinationTag: AppReducer.State.DestinationTag?
+    
+    init(_ state: AppReducer.State) {
+      self.navigationSplitViewVisibility = state.navigationSplitViewVisibility
+      self.destinationTag = state.destinationTag
+    }
+  }
+
+  var body: some View {
+    WithViewStore(store, observe: ViewState.init) { viewStore in
+      NavigationSplitView(columnVisibility: viewStore.binding(
+        get: { $0.navigationSplitViewVisibility },
+        send: { .binding(.set(\.$navigationSplitViewVisibility, $0)) }
+      )) {
+        NavigationStack {
+          List(selection: viewStore.binding(
+            get: { $0.destinationTag },
+            send: { .binding(.set(\.$destinationTag, $0)) }
+          )) {
+            ForEach(AppReducer.State.DestinationTag.allCases) { value in
+              NavigationLink(value: value) {
+                Label(value.label.title, systemImage: value.label.systemImage)
+              }
+            }
+          }
+          .navigationTitle("PocketRadar")
+        }
       } content: {
-        Content(store: store)
+        switch viewStore.destinationTag {
+        case .players:
+          PlayerListView(store: store.scope(state: \.players, action: AppReducer.Action.players))
+        case .sports:
+          SportListView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
+        case .sessions:
+          SessionListView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
+        case .none:
+          EmptyView()
+        }
       } detail: {
-        Detail(store: store)
+        switch viewStore.destinationTag {
+        case .players:
+          PlayerListDetailView(store: store.scope(state: \.players, action: AppReducer.Action.players))
+        case .sports:
+          SportListDetailView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
+        case .sessions:
+          SessionListDetailView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
+        case .none:
+          EmptyView()
+        }
       }
     }
   }
 }
 
-private struct Sidebar: View {
+private struct iPhoneView: View {
   let store: StoreOf<AppReducer>
-
+  
   var body: some View {
-    WithViewStore(store, observe: \.destinationTag) { viewStore in
+    WithViewStore(store, observe: { $0 }) { viewStore in
       NavigationStack {
         List(selection: viewStore.binding(
-          get: { $0 },
+          get: { $0.destinationTag },
           send: { .binding(.set(\.$destinationTag, $0)) }
         )) {
           ForEach(AppReducer.State.DestinationTag.allCases) { value in
@@ -84,66 +140,12 @@ private struct Sidebar: View {
           }
         }
         .navigationTitle("PocketRadar")
+        .listStyle(.plain)
       }
     }
   }
 }
 
-private struct Content: View {
-  let store: StoreOf<AppReducer>
-  
-  var body: some View {
-    WithViewStore(store, observe: \.destinationTag) { viewStore in
-      switch viewStore.state {
-      case .players:
-        PlayerListView(store: store.scope(
-          state: \.players,
-          action: AppReducer.Action.players
-        ))
-      case .sports:
-        SportListView(store: store.scope(
-          state: \.sports,
-          action: AppReducer.Action.sports
-        ))
-      case .sessions:
-        SessionListView(store: store.scope(
-          state: \.sessions,
-          action: AppReducer.Action.sessions
-        ))
-      case .none:
-        EmptyView()
-      }
-    }
-  }
-}
-
-private struct Detail: View {
-  let store: StoreOf<AppReducer>
-  
-  var body: some View {
-    WithViewStore(store, observe: \.destinationTag) { viewStore in
-      switch viewStore.state {
-      case .players:
-        PlayerListDetailView(store: store.scope(
-          state: \.players,
-          action: AppReducer.Action.players
-        ))
-      case .sports:
-        SportListDetailView(store: store.scope(
-          state: \.sports,
-          action: AppReducer.Action.sports
-        ))
-      case .sessions:
-        SessionListDetailView(store: store.scope(
-          state: \.sessions,
-          action: AppReducer.Action.sessions
-        ))
-      case .none:
-        EmptyView()
-      }
-    }
-  }
-}
 
 
 // MARK: - SwiftUI Previews
@@ -155,6 +157,6 @@ struct AppView_Previews: PreviewProvider {
   )
   static var previews: some View {
     AppView(store: Self.store)
-    .previewInterfaceOrientation(.landscapeLeft)
+    //.previewInterfaceOrientation(.landscapeLeft)
   }
 }
