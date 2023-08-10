@@ -6,7 +6,7 @@ struct AppReducer: Reducer {
     var players = PlayerList.State()
     var sports = SportList.State()
     var sessions = SessionList.State()
-    @BindingState var columnVisibility: NavigationSplitViewVisibility = .all
+    @BindingState var navigationSplitViewVisibility = NavigationSplitViewVisibility.all
     @BindingState var destinationTag: DestinationTag? = .sessions
   }
   enum Action: BindableAction, Equatable {
@@ -56,7 +56,7 @@ struct AppView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      NavigationSplitView(columnVisibility: viewStore.$columnVisibility) {
+      NavigationSplitView(columnVisibility: viewStore.$navigationSplitViewVisibility) {
         Sidebar(store: store)
       } content: {
         Content(store: store)

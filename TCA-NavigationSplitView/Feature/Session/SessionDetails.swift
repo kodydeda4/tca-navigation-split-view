@@ -34,6 +34,7 @@ struct SessionDetailsView: View {
           }
         }
         .navigationTitle("Session Details")
+        .listStyle(.plain)
         .toolbar {
           Button("Session Details") {
             //...
