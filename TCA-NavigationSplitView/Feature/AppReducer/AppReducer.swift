@@ -13,7 +13,6 @@ struct AppReducer: Reducer {
     case players(PlayerList.Action)
     case sports(SportList.Action)
     case sessions(SessionList.Action)
-    case setDestinationTag(State.DestinationTag?)
     case binding(BindingAction<State>)
   }
   var body: some ReducerOf<Self> {
@@ -26,17 +25,6 @@ struct AppReducer: Reducer {
     }
     Scope(state: \.sessions, action: /Action.sessions) {
       SessionList()
-    }
-    Reduce { state, action in
-      switch action {
-        
-      case let .setDestinationTag(value):
-        state.destinationTag = value
-        return .none
-        
-      default:
-        return .none
-      }
     }
   }
 }
@@ -87,7 +75,7 @@ private struct Sidebar: View {
       NavigationStack {
         List(selection: viewStore.binding(
           get: { $0 },
-          send: { .setDestinationTag($0) }
+          send: { .binding(.set(\.$destinationTag, $0)) }
         )) {
           ForEach(AppReducer.State.DestinationTag.allCases) { value in
             NavigationLink(value: value) {
