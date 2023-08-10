@@ -17,11 +17,28 @@ struct Sport: Identifiable, Equatable {
   let id: UUID
   let name: String
   
+  static let baseball = Self(id: .init(), name: "Baseball")
+  static let softball = Self(id: .init(), name: "Softball")
+  
   static let defaults: [Self] = [
-    .init(id: .init(), name: "Baseball"),
-    .init(id: .init(), name: "Softball"),
+    .baseball,
+    .softball
   ]
-} 
+}
+
+struct Activity: Identifiable, Equatable {
+  let id: UUID
+  let sportId: UUID
+  let name: String
+  
+  static let defaults: [Self] = [
+    .init(id: .init(), sportId: Sport.baseball.id, name: "Hitting"),
+    .init(id: .init(), sportId: Sport.baseball.id, name: "Pitching"),
+    .init(id: .init(), sportId: Sport.softball.id, name: "Kicking"),
+    .init(id: .init(), sportId: Sport.softball.id, name: "Dodging"),
+  ]
+}
+
 
 struct Session: Identifiable, Equatable {
   let id: UUID

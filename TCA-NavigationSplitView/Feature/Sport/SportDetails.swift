@@ -4,6 +4,9 @@ import ComposableArchitecture
 struct SportDetails: Reducer {
   struct State: Equatable {
     let sport: Sport
+    var activities: [Activity] {
+      Activity.defaults.filter { $0.sportId == sport.id }
+    }
   }
   
   enum Action: Equatable {
@@ -29,8 +32,15 @@ struct SportDetailsView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      Text(viewStore.sport.name)
-        .navigationTitle(viewStore.sport.name)
+      List {
+        Section("Activities") {
+          ForEach(viewStore.activities) { activity in
+            Text(activity.name)
+          }
+        }
+      }
+      .navigationTitle(viewStore.sport.name)
+      .listStyle(.plain)
     }
   }
 }
