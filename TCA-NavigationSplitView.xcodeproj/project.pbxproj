@@ -19,6 +19,7 @@
 		335E85442A856D6B0030A7E5 /* SessionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335E85432A856D6B0030A7E5 /* SessionList.swift */; };
 		335E85462A856E0B0030A7E5 /* SportDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335E85452A856E0B0030A7E5 /* SportDetails.swift */; };
 		335E85482A8579000030A7E5 /* SessionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335E85472A8579000030A7E5 /* SessionDetails.swift */; };
+		335E85522A858E880030A7E5 /* EmptyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335E85512A858E880030A7E5 /* EmptyDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		335E85432A856D6B0030A7E5 /* SessionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionList.swift; sourceTree = "<group>"; };
 		335E85452A856E0B0030A7E5 /* SportDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportDetails.swift; sourceTree = "<group>"; };
 		335E85472A8579000030A7E5 /* SessionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetails.swift; sourceTree = "<group>"; };
+		335E85512A858E880030A7E5 /* EmptyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				335E854E2A85882B0030A7E5 /* Dependencies */,
 				335E854A2A8587E30030A7E5 /* Feature */,
 				335E854C2A8588160030A7E5 /* Resources */,
+				335E85502A858E7F0030A7E5 /* SwiftUI */,
 			);
 			path = "TCA-NavigationSplitView";
 			sourceTree = "<group>";
@@ -144,6 +147,14 @@
 				335E85472A8579000030A7E5 /* SessionDetails.swift */,
 			);
 			path = Session;
+			sourceTree = "<group>";
+		};
+		335E85502A858E7F0030A7E5 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				335E85512A858E880030A7E5 /* EmptyDetailView.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +238,7 @@
 				335E852A2A8555C60030A7E5 /* AppReducer.swift in Sources */,
 				335E85482A8579000030A7E5 /* SessionDetails.swift in Sources */,
 				335E85402A856CEC0030A7E5 /* PlayerDetails.swift in Sources */,
+				335E85522A858E880030A7E5 /* EmptyDetailView.swift in Sources */,
 				335E85422A856D0C0030A7E5 /* Models.swift in Sources */,
 				335E853E2A856CE60030A7E5 /* SportList.swift in Sources */,
 				335E85282A8555C60030A7E5 /* Main.swift in Sources */,

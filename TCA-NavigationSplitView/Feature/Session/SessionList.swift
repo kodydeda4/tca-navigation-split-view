@@ -19,7 +19,7 @@ struct SessionList: Reducer {
           state.destination = .init(session: session)
         }
         return .none
-      
+        
       default:
         return .none
         
@@ -55,12 +55,14 @@ struct SessionListDetailView: View {
   let store: StoreOf<SessionList>
   
   var body: some View {
-    IfLetStore(store.scope(
-      state: \.destination,
-      action: SessionList.Action.destination
-    ), then: SessionDetailsView.init(store:))
+    IfLetStore(
+      store.scope(state: \.destination, action: SessionList.Action.destination),
+      then: SessionDetailsView.init(store:),
+      else: EmptyDetailView.init
+    )
   }
 }
+
 
 // MARK: - SwiftUI Previews
 

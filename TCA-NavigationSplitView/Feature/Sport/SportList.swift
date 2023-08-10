@@ -56,10 +56,11 @@ struct SportListDetailView: View {
   let store: StoreOf<SportList>
   
   var body: some View {
-    IfLetStore(store.scope(
-      state: \.destination,
-      action: SportList.Action.destination
-    ), then: SportDetailsView.init(store:))
+    IfLetStore(
+      store.scope(state: \.destination, action: SportList.Action.destination),
+      then: SportDetailsView.init(store:),
+      else: EmptyDetailView.init
+    )
   }
 }
 

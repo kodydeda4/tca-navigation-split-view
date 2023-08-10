@@ -41,3 +41,8 @@ struct Session: Identifiable, Equatable {
   ]
 }
 
+struct LabelValue: Equatable {
+  let title: String
+  let systemImage: String
+}
+

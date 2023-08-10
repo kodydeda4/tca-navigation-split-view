@@ -3,35 +3,46 @@ import ComposableArchitecture
 
 struct AppReducer: Reducer {
   struct State: Equatable {
-    var screenA = PlayerList.State()
-    var screenB = SportList.State()
-    var screenC = SessionList.State()
+    var players = PlayerList.State()
+    var sports = SportList.State()
+    var sessions = SessionList.State()
     
-    @BindingState var destinationTag: DestinationTag? = .screenA
+    @BindingState var destinationTag: DestinationTag? = .players
     
     enum DestinationTag: String, Identifiable, Equatable, CaseIterable {
       var id: Self { self }
-      case screenA = "Screen A"
-      case screenB = "Screen B"
-      case screenC = "Screen C"
+      case players = "Players"
+      case sports = "Sports"
+      case sessions = "Sessions"
+    
+      var label: LabelValue {
+        switch self {
+        case .players:
+          return .init(title: "Players", systemImage: "person.2")
+        case .sports:
+          return .init(title: "Sports", systemImage: "baseball")
+        case .sessions:
+          return .init(title: "Sessions", systemImage: "list.clipboard")
+        }
+      }
     }
   }
   enum Action: BindableAction, Equatable {
-    case screenA(PlayerList.Action)
-    case screenB(SportList.Action)
-    case screenC(SessionList.Action)
+    case players(PlayerList.Action)
+    case sports(SportList.Action)
+    case sessions(SessionList.Action)
     case setDestinationTag(State.DestinationTag)
     case binding(BindingAction<State>)
   }
   var body: some ReducerOf<Self> {
     BindingReducer()
-    Scope(state: \.screenA, action: /Action.screenA) {
+    Scope(state: \.players, action: /Action.players) {
       PlayerList()
     }
-    Scope(state: \.screenB, action: /Action.screenB) {
+    Scope(state: \.sports, action: /Action.sports) {
       SportList()
     }
-    Scope(state: \.screenC, action: /Action.screenC) {
+    Scope(state: \.sessions, action: /Action.sessions) {
       SessionList()
     }
     Reduce { state, action in
@@ -57,35 +68,34 @@ struct AppView: View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       NavigationSplitView {
         NavigationStack {
-          List(
-            AppReducer.State.DestinationTag.allCases,
-            selection: viewStore.$destinationTag
-          ) { destination in
-            NavigationLink(value: destination) {
-              Label(destination.rawValue, systemImage: "leaf")
+          List(selection: viewStore.$destinationTag) {
+            ForEach(AppReducer.State.DestinationTag.allCases) { value in
+              NavigationLink(value: value) {
+                Label(value.label.title, systemImage: value.label.systemImage)
+              }
             }
           }
-          .navigationTitle("Title")
+          .navigationTitle("PocketRadar")
         }
       } content: {
         switch viewStore.destinationTag {
-        case .screenA:
-          PlayerListView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
-        case .screenB:
-          SportListView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
-        case .screenC:
-          SessionListView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
+        case .players:
+          PlayerListView(store: store.scope(state: \.players, action: AppReducer.Action.players))
+        case .sports:
+          SportListView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
+        case .sessions:
+          SessionListView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
         case .none:
           EmptyView()
         }
       } detail: {
         switch viewStore.destinationTag {
-        case .screenA:
-          PlayerListDetailView(store: store.scope(state: \.screenA, action: AppReducer.Action.screenA))
-        case .screenB:
-          SportListDetailView(store: store.scope(state: \.screenB, action: AppReducer.Action.screenB))
-        case .screenC:
-          SessionListDetailView(store: store.scope(state: \.screenC, action: AppReducer.Action.screenC))
+        case .players:
+          PlayerListDetailView(store: store.scope(state: \.players, action: AppReducer.Action.players))
+        case .sports:
+          SportListDetailView(store: store.scope(state: \.sports, action: AppReducer.Action.sports))
+        case .sessions:
+          SessionListDetailView(store: store.scope(state: \.sessions, action: AppReducer.Action.sessions))
         case .none:
           EmptyView()
         }
@@ -97,11 +107,12 @@ struct AppView: View {
 // MARK: - SwiftUI Previews
 
 struct AppView_Previews: PreviewProvider {
+  static let store = Store(
+    initialState: AppReducer.State(),
+    reducer: AppReducer.init
+  )
   static var previews: some View {
-    AppView(store: Store(
-      initialState: AppReducer.State(),
-      reducer: AppReducer.init
-    ))
+    AppView(store: Self.store)
     .previewInterfaceOrientation(.landscapeLeft)
   }
 }

@@ -29,7 +29,7 @@ struct SessionDetailsView: View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       List {
         ForEach(viewStore.session.measurements, id: \.self) { measurement in
-          Text(measurement.description)
+          Text("\(Int(measurement.value)) \(measurement.unit.symbol)")
         }
       }
     }
