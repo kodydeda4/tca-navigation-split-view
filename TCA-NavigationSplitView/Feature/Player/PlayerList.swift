@@ -21,7 +21,7 @@ struct PlayerList: Reducer {
           state.destination = .init(player: player)
         }
         return .none
-      
+        
       default:
         return .none
         
@@ -37,19 +37,26 @@ struct PlayerListView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      List {
-        ForEach(viewStore.players) { player in
-          Button(action: {
-            viewStore.send(.showDetails(for: player))
-          }) {
-            Text("\(player.name)")
-              .fontWeight(.semibold)
-              .foregroundColor(viewStore.destination?.player.id == player.id ? .accentColor : .secondary)
+      NavigationStack {
+        List {
+          ForEach(viewStore.players) { player in
+            Button(action: {
+              viewStore.send(.showDetails(for: player))
+            }) {
+              Text("\(player.name)")
+                .fontWeight(.semibold)
+                .foregroundColor(viewStore.destination?.player.id == player.id ? .accentColor : .secondary)
+            }
+          }
+        }
+        .navigationTitle("Players")
+        .toolbar {
+          Button("Players") {
+            //...
           }
         }
       }
     }
-    .navigationTitle("Players")
   }
 }
 

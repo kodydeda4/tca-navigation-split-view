@@ -36,19 +36,26 @@ struct SportListView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      List {
-        ForEach(viewStore.people) { sport in
-          Button(action: {
-            viewStore.send(.showDetails(for: sport))
-          }) {
-            Text("\(sport.name)")
-              .fontWeight(.semibold)
-              .foregroundColor(viewStore.destination?.sport.id == sport.id ? .accentColor : .secondary)
+      NavigationStack {
+        List {
+          ForEach(viewStore.people) { sport in
+            Button(action: {
+              viewStore.send(.showDetails(for: sport))
+            }) {
+              Text("\(sport.name)")
+                .fontWeight(.semibold)
+                .foregroundColor(viewStore.destination?.sport.id == sport.id ? .accentColor : .secondary)
+            }
+          }
+        }
+        .navigationTitle("Sports")
+        .toolbar {
+          Button("Sports") {
+            //...
           }
         }
       }
     }
-    .navigationTitle("Sports")
   }
 }
 

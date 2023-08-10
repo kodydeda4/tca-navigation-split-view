@@ -27,13 +27,20 @@ struct SessionDetailsView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      List {
-        ForEach(viewStore.session.measurements, id: \.self) { measurement in
-          Text("\(Int(measurement.value)) \(measurement.unit.symbol)")
+      NavigationStack {
+        List {
+          ForEach(viewStore.session.measurements, id: \.self) { measurement in
+            Text("\(Int(measurement.value)) \(measurement.unit.symbol)")
+          }
+        }
+        .navigationTitle("Session Details")
+        .toolbar {
+          Button("Session Details") {
+            //...
+          }
         }
       }
     }
-    .navigationTitle("Session Details")
   }
 }
 

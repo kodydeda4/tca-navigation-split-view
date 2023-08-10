@@ -29,10 +29,17 @@ struct PlayerDetailsView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      Text("Details")
-        .font(.title)
-        .foregroundStyle(.secondary)
+      NavigationStack {
+        List {
+          //...
+        }
         .navigationTitle(viewStore.player.name)
+        .toolbar {
+          Button("Player Details") {
+            //...
+          }
+        }
+      }
     }
   }
 }

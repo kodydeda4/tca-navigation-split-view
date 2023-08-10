@@ -6,26 +6,8 @@ struct AppReducer: Reducer {
     var players = PlayerList.State()
     var sports = SportList.State()
     var sessions = SessionList.State()
-    
-    @BindingState var destinationTag: DestinationTag? = .players
-    
-    enum DestinationTag: String, Identifiable, Equatable, CaseIterable {
-      var id: Self { self }
-      case players = "Players"
-      case sports = "Sports"
-      case sessions = "Sessions"
-    
-      var label: LabelValue {
-        switch self {
-        case .players:
-          return .init(title: "Players", systemImage: "person.2")
-        case .sports:
-          return .init(title: "Sports", systemImage: "baseball")
-        case .sessions:
-          return .init(title: "Sessions", systemImage: "list.clipboard")
-        }
-      }
-    }
+    @BindingState var columnVisibility: NavigationSplitViewVisibility = .all
+    @BindingState var destinationTag: DestinationTag? = .sessions
   }
   enum Action: BindableAction, Equatable {
     case players(PlayerList.Action)
@@ -59,6 +41,26 @@ struct AppReducer: Reducer {
   }
 }
 
+extension AppReducer.State {
+  enum DestinationTag: String, Identifiable, Equatable, CaseIterable {
+    var id: Self { self }
+    case players = "Players"
+    case sports = "Sports"
+    case sessions = "Sessions"
+  
+    var label: LabelValue {
+      switch self {
+      case .players:
+        return .init(title: "Players", systemImage: "person.2")
+      case .sports:
+        return .init(title: "Sports", systemImage: "baseball")
+      case .sessions:
+        return .init(title: "Sessions", systemImage: "list.clipboard")
+      }
+    }
+  }
+}
+
 // MARK: - SwiftUI
 
 struct AppView: View {
@@ -66,7 +68,7 @@ struct AppView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      NavigationSplitView {
+      NavigationSplitView(columnVisibility: viewStore.$columnVisibility) {
         NavigationStack {
           List(selection: viewStore.$destinationTag) {
             ForEach(AppReducer.State.DestinationTag.allCases) { value in

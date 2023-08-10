@@ -32,15 +32,22 @@ struct SportDetailsView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      List {
-        Section("Activities") {
-          ForEach(viewStore.activities) { activity in
-            Text(activity.name)
+      NavigationStack {
+        List {
+          Section("Activities") {
+            ForEach(viewStore.activities) { activity in
+              Text(activity.name)
+            }
+          }
+        }
+        .navigationTitle(viewStore.sport.name)
+        .listStyle(.plain)
+        .toolbar {
+          Button("Sport Details") {
+            //...
           }
         }
       }
-      .navigationTitle(viewStore.sport.name)
-      .listStyle(.plain)
     }
   }
 }

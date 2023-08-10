@@ -35,19 +35,26 @@ struct SessionListView: View {
   
   var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
-      List {
-        ForEach(viewStore.sessions) { session in
-          Button(action: {
-            viewStore.send(.showDetails(for: session))
-          }) {
-            Text("\(session.id.description.prefix(8).description)")
-              .fontWeight(.semibold)
-              .foregroundColor(viewStore.destination?.session.id == session.id ? .accentColor : .secondary)
+      NavigationStack {
+        List {
+          ForEach(viewStore.sessions) { session in
+            Button(action: {
+              viewStore.send(.showDetails(for: session))
+            }) {
+              Text("\(session.id.description.prefix(8).description)")
+                .fontWeight(.semibold)
+                .foregroundColor(viewStore.destination?.session.id == session.id ? .accentColor : .secondary)
+            }
+          }
+        }
+        .navigationTitle("Sessions")
+        .toolbar {
+          Button("Sessions") {
+            //...
           }
         }
       }
     }
-    .navigationTitle("Sessions")
   }
 }
 
