@@ -8,7 +8,7 @@ This demo shows how [ComposableArchitecture](https://github.com/pointfreeco/swif
 
  Sidebar contains value-based navigation links to multiple different child features. In this example, a global `AppReducer` contains nested `FeatureList` reducers - each with their own optional `FeatureDetails` reducers. This ensures that content & detail views in the NavigationSplitView are persisted across multiple selections, and each section can be understood independently.
 
-<img width="500" alt="sidebar" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/0ff2d9d1-8d13-40d9-abfa-4a667f291804">
+<img width="900" alt="sidebar" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/0ff2d9d1-8d13-40d9-abfa-4a667f291804">
 
 ```swift
 // AppReducer
@@ -90,7 +90,7 @@ struct AppView: View {
 
 Content views contain value-based navigation links to `detail` views, as well their own sheets, alerts, confirmationDialogs, etc. Separating the presentation logic for detail and destination states allows the content view to display alerts without losing the detail selection.
 
-<img width="500" alt="content" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/f9663d20-5b16-45fe-94d3-4da3802a65a8">
+<img width="900" alt="content" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/f9663d20-5b16-45fe-94d3-4da3802a65a8">
 
 ```swift
 // FeatureList
@@ -219,7 +219,7 @@ struct FeatureListDetailsView: View {
 
 Detail views are modeled as optional presentation states for list features. This allows their logic to be understood in isolation.
 
-<img width="500" alt="detail" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/15b56498-19c3-47b3-b03a-55a0b32c2fe6">
+<img width="900" alt="detail" src="https://github.com/kodydeda4/TCA-NavigationSplitView/assets/45678211/15b56498-19c3-47b3-b03a-55a0b32c2fe6">
 
 ```swift
 // FeatureDetails
